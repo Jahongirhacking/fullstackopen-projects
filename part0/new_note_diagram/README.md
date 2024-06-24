@@ -2,6 +2,13 @@
   sequenceDiagram
       participant browser
       participant server
+
+      browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note
+      activate server
+      server-->>browser: HTML document
+      deactivate server
+
+      Note right of browser: The browser is redirected to '/notes' and again makes the same previous GET request calls
   
       browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
       activate server
