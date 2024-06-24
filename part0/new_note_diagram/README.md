@@ -8,7 +8,7 @@
       server-->>browser: HTML document
       deactivate server
 
-      Note right of browser: The browser is redirected to '/notes' and again makes the same previous GET request calls
+      Note right of browser: If body of the request is fine then it will be added to the notes array. Then the browser is redirected to '/notes' and again makes the same previous GET request calls
   
       browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
       activate server
