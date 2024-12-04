@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react'
 import Filter from "./components/Filter.jsx";
 import PersonForm from "./components/PersonForm.jsx";
 import Persons from "./components/Persons.jsx";
-import axios from "axios";
+import {create, getAll} from "./services/persons.js";
 
 const App = () => {
     const [persons, setPersons] = useState([])
@@ -12,18 +12,19 @@ const App = () => {
 
     useEffect(() => {
         (async () => {
-            const result = await axios.get('http://localhost:3001/persons');
-            setPersons(result.data);
+            const result = await getAll();
+            setPersons(result);
         })()
     }, []);
 
-    const handleClick = (e) => {
+    const handleClick = async (e) => {
         e.preventDefault();
         if(persons.map(person => person.name).includes(newName)) {
             alert(`${newName} is already added to phonebook`);
             return;
         }
-        setPersons([...persons, {name: newName, number: newNumber }]);
+        const newPersons = await create({name: newName, number: newNumber });
+        setPersons((prev) => [...prev, newPersons]);
         setNewName('');
         setNewNumber('');
     }
