@@ -1,3 +1,5 @@
+import Weather from "./Weather.jsx";
+
 const CountryDetails = ({ country }) => {
     return (
         <div className="country-details">
@@ -9,7 +11,8 @@ const CountryDetails = ({ country }) => {
                 <ul>
                     {Object.values(country.languages).map(langName => <li key={langName}>{langName}</li>)}
                 </ul>
-            <img alt={'flag image'} src={country.flags.svg}/>
+            <img style={{border: '2px solid black', width: 200}} alt={'flag image'} src={country.flags.svg}/>
+            <Weather country={country} />
         </div>
     )
 }
