@@ -45,6 +45,7 @@ const App = () => {
             <Persons
                 persons={persons}
                 filterName={filterName}
+                setPersons={setPersons}
             />
         </div>
     )
