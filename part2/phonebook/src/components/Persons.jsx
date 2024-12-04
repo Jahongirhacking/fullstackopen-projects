@@ -1,10 +1,18 @@
-import {deletePerson} from "../services/persons.js";
+import {deletePerson, getAll} from "../services/persons.js";
 
-const Persons = ({persons, filterName, setPersons}) => {
+const Persons = ({persons, filterName, setPersons, showMessage}) => {
     const handleRemove = async (person) => {
-        if(!window.confirm(`Delete ${person.name}?`)) return;
-        const res = await deletePerson(person.id);
-        setPersons(prev => prev.filter(person => person.id !== res.id));
+        try {
+            if(!window.confirm(`Delete ${person.name}?`)) return;
+            const res = await deletePerson(person.id);
+            setPersons(prev => prev.filter(person => person.id !== res.id));
+            showMessage(`Deleted ${person.name}`, true);
+        } catch (err) {
+            console.error(err);
+            showMessage(`Information of ${person.name} has already been removed from server`, false);
+            const res = await getAll();
+            setPersons(res);
+        }
     }
 
     return (
