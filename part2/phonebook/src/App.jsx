@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react'
 import Filter from "./components/Filter.jsx";
 import PersonForm from "./components/PersonForm.jsx";
 import Persons from "./components/Persons.jsx";
-import {create, getAll} from "./services/persons.js";
+import {create, getAll, update} from "./services/persons.js";
 
 const App = () => {
     const [persons, setPersons] = useState([])
@@ -17,16 +17,28 @@ const App = () => {
         })()
     }, []);
 
+    const clearInputs = () => {
+        setNewName('');
+        setNewNumber('');
+    }
+
     const handleClick = async (e) => {
         e.preventDefault();
         if(persons.map(person => person.name).includes(newName)) {
-            alert(`${newName} is already added to phonebook`);
+            if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+                const oldPerson = persons.find(person => person.name === newName);
+                const res = await update(
+                    oldPerson.id,
+                    {...oldPerson, number: newNumber},
+                    );
+                setPersons(prev => prev.map(person => person.id !== res.id ? person : res));
+            }
+            clearInputs();
             return;
         }
         const newPersons = await create({name: newName, number: newNumber });
         setPersons((prev) => [...prev, newPersons]);
-        setNewName('');
-        setNewNumber('');
+        clearInputs();
     }
 
     return (
