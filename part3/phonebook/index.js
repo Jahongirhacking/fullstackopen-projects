@@ -2,6 +2,10 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 
+const generateId = () => {
+    return String(Math.floor(Math.random() * 1000000));
+}
+
 let persons = [
     {
         id: "1",
@@ -57,6 +61,20 @@ app.delete('/api/persons/:id', (req, res) => {
     persons = persons.filter(person => person.id !== id);
     res.status(204).end(person);
 })
+
+app.post('/api/persons', (req, res) => {
+    const newPerson = req.body;
+    if (!newPerson.name || persons.some(person => person.name.toLowerCase() === newPerson.name.toLowerCase())) {
+        return res.status(400).json({ error: 'name must be unique' });
+    }
+    const person = {
+        id: generateId(),
+        name: newPerson.name,
+        number: newPerson.number || '',
+    };
+    persons = [...persons, person];
+    res.json(person);
+});
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
