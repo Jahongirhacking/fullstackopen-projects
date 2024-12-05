@@ -29,16 +29,26 @@ app.get('/', (req, res) => {
     res.send('<a href="/api/persons">GET /api/persons</a>');
 })
 
-app.get('/api/persons', (req, res) => {
-    res.json(persons);
-})
-
 app.get('/info', (req, res) => {
     console.log(new Date());
     res.send(`<p>
         <p>Phonebook has info for ${persons.length} people</p>
         <p>${new Date()}</p>
     </p>`);
+})
+
+app.get('/api/persons', (req, res) => {
+    res.json(persons);
+})
+
+app.get('/api/persons/:id', (req, res) => {
+    const id = req.params.id;
+    const person = persons.find(person => person.id === id);;
+    if(person) {
+        res.json(person);
+    } else {
+        res.status(404).send('No such person');
+    }
 })
 
 const PORT = process.env.PORT || 3001;
