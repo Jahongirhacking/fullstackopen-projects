@@ -33,6 +33,14 @@ app.get('/api/persons', (req, res) => {
     res.json(persons);
 })
 
+app.get('/info', (req, res) => {
+    console.log(new Date());
+    res.send(`<p>
+        <p>Phonebook has info for ${persons.length} people</p>
+        <p>${new Date()}</p>
+    </p>`);
+})
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
     console.log(`Listening on http://localhost:${PORT}`);
