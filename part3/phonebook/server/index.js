@@ -2,6 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 const app = express();
 app.use(express.json());
+app.use(express.static('dist'));
 morgan.token('req-body', (req) => {
     return JSON.stringify(req.body);
 });
@@ -64,7 +65,7 @@ app.delete('/api/persons/:id', (req, res) => {
     const id = req.params.id;
     const person = persons.find(person => person.id === id);
     persons = persons.filter(person => person.id !== id);
-    res.status(204).end(person);
+    res.status(204).end(JSON.stringify(person));
 })
 
 app.post('/api/persons', (req, res) => {
