@@ -4,8 +4,8 @@ const Persons = ({persons, filterName, setPersons, showMessage}) => {
     const handleRemove = async (person) => {
         try {
             if(!window.confirm(`Delete ${person.name}?`)) return;
-            const res = await deletePerson(person.id);
-            setPersons(prev => prev.filter(person => person.id !== res.id));
+            await deletePerson(person.id);
+            setPersons(prev => prev.filter(p => person.id !== p.id));
             showMessage(`Deleted ${person.name}`, true);
         } catch (err) {
             console.error(err);

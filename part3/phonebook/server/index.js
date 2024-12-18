@@ -15,26 +15,22 @@ app.get('/', (req, res) => {
     res.send('<a href="/api/persons">GET /api/persons</a>');
 })
 
-app.get('/info', (req, res) => {
+app.get('/info', (req, res, next) => {
     PhoneBook.find({}).then(persons => {
         res.send(`<p>
         <p>Phonebook has info for ${persons.length} people</p>
         <p>${new Date()}</p>
     </p>`);
-    }).catch(err => {
-        console.log("Error happened in fetching from database", err);
-    })
+    }).catch(err => next(err))
 })
 
-app.get('/api/persons', (req, res) => {
+app.get('/api/persons', (req, res, next) => {
     PhoneBook.find({}).then(persons => {
         res.json(persons);
-    }).catch(err => {
-        console.log("Error happened in fetching from database", err);
-    })
+    }).catch(err => next(err))
 })
 
-app.get('/api/persons/:id', (req, res) => {
+app.get('/api/persons/:id', (req, res, next) => {
     const id = req.params.id;
     PhoneBook.findById(id).then(person => {
         if(person) {
@@ -42,23 +38,20 @@ app.get('/api/persons/:id', (req, res) => {
         } else {
             res.status(404).send('No such person');
         }
-    }).catch(error => {
-        console.log(error)
-        res.status(500).end()
-    });
+    }).catch(error => next(error));
 })
 
-app.delete('/api/persons/:id', (req, res) => {
+app.delete('/api/persons/:id', (req, res, next) => {
     const id = req.params.id;
-    PhoneBook.deleteOne({_id: id}).then(person => {
-        res.json({id});
-    }).catch(err => res.status(404).end())
+    PhoneBook.findByIdAndDelete(id).then(person => {
+        res.status(204).end();
+    }).catch(err => next(err))
 })
 
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
     const newPerson = req.body;
     if (!newPerson.name) {
-        return res.status(400).json({ error: 'name must be unique' });
+        return res.status(400).json({ error: 'name must not be empty' });
     }
     const person = new PhoneBook({
         name: newPerson.name,
@@ -66,10 +59,31 @@ app.post('/api/persons', (req, res) => {
     });
     person.save().then(person => {
         res.json(person);
-    }).catch(err => {
-        console.log("Error on adding person to phonebook", err);
-    })
+    }).catch(err => next(err))
 });
+
+app.put('/api/persons/:id', (req, res, next) => {
+    const id = req.params.id;
+    const person = {name: req.body.name, number: req.body.number};
+
+    PhoneBook.findByIdAndUpdate(id, person, {new: true}).then(updatedPerson => {
+        res.status(200).json(updatedPerson);
+    }).catch(err => next(err))
+})
+
+const unknownEndpoint = (req, res) => {
+    res.status(404).send({error: 'unknown endpoint'});
+}
+app.use(unknownEndpoint);
+
+const errorHandler = (err, req, res, next) => {
+    console.error(err.message);
+    if (err.name === 'CastError') {
+        return res.status(400).send({ error: 'malformatted id' })
+    }
+    next(err)
+}
+app.use(errorHandler)
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
