@@ -10,8 +10,22 @@ mongoose.connect(url).then(() => {
 }). catch(err => console.log("error connecting to MongoDB", err.message));
 
 const phonebookSchema = new mongoose.Schema({
-    name: String,
-    number: String,
+    name: {
+        type: String,
+        minlength: 3,
+        required: true,
+    },
+    number: {
+        type: String,
+        validate: {
+            validator: (v) => {
+                return /^\d{2,3}-\d+$/.test(v);
+            },
+            message: 'Please enter correct number, XX-... or XXX-...',
+        },
+        minlength: 8,
+        required: [true, 'User phone number required']
+    },
 })
 
 phonebookSchema.set("toJSON", {

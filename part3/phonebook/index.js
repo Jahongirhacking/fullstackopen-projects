@@ -66,7 +66,7 @@ app.put('/api/persons/:id', (req, res, next) => {
     const id = req.params.id;
     const person = {name: req.body.name, number: req.body.number};
 
-    PhoneBook.findByIdAndUpdate(id, person, {new: true}).then(updatedPerson => {
+    PhoneBook.findByIdAndUpdate(id, person, {new: true, runValidators: true, context: 'query'}).then(updatedPerson => {
         res.status(200).json(updatedPerson);
     }).catch(err => next(err))
 })
@@ -80,6 +80,9 @@ const errorHandler = (err, req, res, next) => {
     console.error(err.message);
     if (err.name === 'CastError') {
         return res.status(400).send({ error: 'malformatted id' })
+    }
+    if(err.name === 'ValidationError') {
+        return res.status(400).send({ error: err.message });
     }
     next(err)
 }
