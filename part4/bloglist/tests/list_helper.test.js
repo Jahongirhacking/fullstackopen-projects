@@ -104,3 +104,24 @@ describe("the author who has largest amount of blogs among", () => {
         });
     })
 })
+
+
+describe("the author who has largest amount of likes among", () => {
+    test('empty blogs is null', () => {
+        assert.strictEqual(listHelper.mostLikes([]), null)
+    })
+
+    test('one blog is author itself', () => {
+        assert.deepStrictEqual(listHelper.mostLikes(blogs.slice(0, 1)), {
+            author: "Michael Chan",
+            likes: 7
+        });
+    })
+
+    test('blogs is calculated right', () => {
+        assert.deepStrictEqual(listHelper.mostLikes(blogs), {
+            author: "Edsger W. Dijkstra",
+            likes: 17
+        });
+    })
+})
