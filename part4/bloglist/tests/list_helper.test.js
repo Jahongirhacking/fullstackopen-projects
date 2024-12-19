@@ -58,15 +58,6 @@ test("dummy returns one", () => {
 })
 
 describe('total likes', () => {
-    const blog = {
-        _id: '5a422aa71b54a676234d17f8',
-        title: 'Go To Statement Considered Harmful',
-        author: 'Edsger W. Dijkstra',
-        url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf',
-        likes: 5,
-        __v: 0
-    };
-
     test('of empty list is zero', () => {
         assert.strictEqual(listHelper.totalLikes([]), 0)
     })
@@ -91,5 +82,25 @@ describe('favorite blog among', () => {
 
     test('blogs is calculated right', () => {
         assert.deepStrictEqual(listHelper.favoriteBlog(blogs), blogs[2]);
+    })
+})
+
+describe("the author who has largest amount of blogs among", () => {
+    test('empty blogs is null', () => {
+        assert.strictEqual(listHelper.mostBlogs([]), null)
+    })
+
+    test('one blog is author itself', () => {
+        assert.deepStrictEqual(listHelper.mostBlogs(blogs.slice(0, 1)), {
+            author: "Michael Chan",
+            blogs: 1
+        });
+    })
+
+    test('blogs is calculated right', () => {
+        assert.deepStrictEqual(listHelper.mostBlogs(blogs), {
+            author: "Robert C. Martin",
+            blogs: 3
+        });
     })
 })
