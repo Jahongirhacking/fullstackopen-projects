@@ -8,11 +8,12 @@ const blogSchema = new mongoose.Schema({
     },
     author: {
         type: String,
-        required: true,
+        default: ""
     },
     url: {
         type: String,
         default: '',
+        required: true,
     },
     likes: {
         type: Number,
