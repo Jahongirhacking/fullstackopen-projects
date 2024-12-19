@@ -23,6 +23,12 @@ describe("check /api/blogs/ route", async () => {
         const response = await api.get('/api/blogs');
         assert.strictEqual(response.body.length, testHelper.initialBloglist.length);
     })
+
+    test("is there a field id", async () => {
+        const response = await api.get(`/api/blogs`);
+        assert.notStrictEqual(response.body[0].id, undefined);
+        assert.strictEqual(response.body[0]._id, undefined);
+    })
 })
 
 after(async () => {
