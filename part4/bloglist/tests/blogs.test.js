@@ -54,8 +54,25 @@ describe("check /api/blogs/ route", async () => {
         assert.strictEqual(blogs.length, testHelper.initialBloglist.length+1);
     })
 
-    test("missing like property should output 0", async () => {
+    test("missing title or url property should output 400 error", async () => {
         await api.post(`/api/blogs`).send({}).expect(400);
+    })
+
+    test("delete a blog and check length", async () => {
+        const blogsAtStart = await testHelper.getBloglistFromDb();
+        const blog = blogsAtStart[0];
+        await api.delete(`/api/blogs/${blog.id}`).expect(204);
+        const blogsAtEnd = await testHelper.getBloglistFromDb();
+        assert(!(blogsAtEnd.map(b => b.id).includes(blog.id)));
+        assert.strictEqual(blogsAtEnd.length, testHelper.initialBloglist.length-1);
+    })
+
+    test("upvote likes count", async () => {
+        const blogsAtStart = await testHelper.getBloglistFromDb();
+        const blog = blogsAtStart[0];
+        await api.put(`/api/blogs/${blog.id}/likes`).expect(201);
+        const blogsAtEnd = await testHelper.getBloglistFromDb();
+        assert.strictEqual(blogsAtEnd.find(b => b.id === blog.id).likes, blog.likes+1);
     })
 })
 
