@@ -14,6 +14,13 @@ beforeEach(async () => {
     await Promise.all(blogListArr);
 })
 
+const newBlog = {
+    title: "Tuzoq",
+    author: "Hello World",
+    url: "https://jamesclear.com/atomic-habits",
+    likes: 4
+};
+
 describe("check /api/blogs/ route", async () => {
     test("in json format", async () => {
         await api.get('/api/blogs').expect(200).expect('Content-Type', /application\/json/);
@@ -28,6 +35,13 @@ describe("check /api/blogs/ route", async () => {
         const response = await api.get(`/api/blogs`);
         assert.notStrictEqual(response.body[0].id, undefined);
         assert.strictEqual(response.body[0]._id, undefined);
+    })
+
+    test("adding new blog and check length", async () => {
+        const response = await api.post(`/api/blogs`).send(newBlog).expect(201).expect('Content-Type', /application\/json/);
+        assert.strictEqual(response.body.title, newBlog.title);
+        const blogs = await testHelper.getBloglistFromDb();
+        assert.strictEqual(blogs.length, testHelper.initialBloglist.length+1);
     })
 })
 
