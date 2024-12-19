@@ -15,7 +15,11 @@ beforeEach(async () => {
 })
 
 describe("check /api/blogs/ route", async () => {
-    test("get number of blogs", async () => {
+    test("in json format", async () => {
+        await api.get('/api/blogs').expect(200).expect('Content-Type', /application\/json/);
+    })
+
+    test("get all blogs", async () => {
         const response = await api.get('/api/blogs');
         assert.strictEqual(response.body.length, testHelper.initialBloglist.length);
     })
