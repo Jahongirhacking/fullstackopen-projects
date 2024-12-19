@@ -43,6 +43,16 @@ describe("check /api/blogs/ route", async () => {
         const blogs = await testHelper.getBloglistFromDb();
         assert.strictEqual(blogs.length, testHelper.initialBloglist.length+1);
     })
+
+    test("missing like property should output 0", async () => {
+        const response = await api.post(`/api/blogs`).send({
+            title: "Lorem Ipsum Dolor",
+            author: "Lorem Ipsum",
+        }).expect(201).expect('Content-Type', /application\/json/);
+        assert.strictEqual(response.body.likes, 0);
+        const blogs = await testHelper.getBloglistFromDb();
+        assert.strictEqual(blogs.length, testHelper.initialBloglist.length+1);
+    })
 })
 
 after(async () => {
