@@ -9,6 +9,10 @@ userRouter.get('/', async (req, res) => {
 
 userRouter.post('/', async (req, res) => {
     const { name, username, password } = req.body;
+    if(password.length < 3) {
+        res.status(400).send({error: 'Password must be at least 3 characters'});
+        return;
+    }
     const passwordHash = bcrypt.hashSync(password, 10);
     const user = new User({name, username, passwordHash});
     const savedUser = await user.save();

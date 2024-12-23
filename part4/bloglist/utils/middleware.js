@@ -11,7 +11,10 @@ const unknownEndpoint = (req, res, next) => {
 }
 
 const errorHandler = (err, req, res, next) => {
-    if (err.errorResponse.errmsg.includes('E11000 duplicate key error')) {
+    if(err.name === 'ValidationError') {
+        res.status(400).send({error: err.message});
+    }
+    if (err?.errorResponse?.errmsg?.includes('E11000 duplicate key error')) {
         res.status(400).send({error: "username is taken"});
     }
     next(err);
