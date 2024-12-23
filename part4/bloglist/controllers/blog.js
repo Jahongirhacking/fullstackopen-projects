@@ -21,8 +21,18 @@ blogRouter.post('/', async (request, response) => {
 })
 
 blogRouter.delete('/:id', async (request, response) => {
-    await Blog.findByIdAndDelete(request.params.id);
-    response.status(204).end();
+    const blog_id = request.params.id;
+    const blog = await  Blog.findById(blog_id);
+    const user_credentials = jwt.verify(request.token, process.env.JWT_SECRET);
+    const user = await User.findById(user_credentials.id);
+    if(user._id.toString() === blog.user.toString()) {
+        await Blog.findByIdAndDelete(blog_id);
+        user.blogs = user.blogs.filter((blog) => blog.toString() !== blog_id);
+        await user.save();
+        response.status(204).end();
+    } else {
+        response.status(403).send({error: "Forbidden"});
+    }
 })
 
 blogRouter.put('/:id/likes', async (request, response) => {
