@@ -11,6 +11,9 @@ const unknownEndpoint = (req, res, next) => {
 }
 
 const errorHandler = (err, req, res, next) => {
+    if (err.errorResponse.errmsg.includes('E11000 duplicate key error')) {
+        res.status(400).send({error: "username is taken"});
+    }
     next(err);
 }
 
