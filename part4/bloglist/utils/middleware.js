@@ -23,13 +23,10 @@ const unknownEndpoint = (req, res, next) => {
 const errorHandler = (err, req, res, next) => {
     if(err.name === 'ValidationError') {
         res.status(400).send({error: err.message});
-        return;
     } else if(err.name === 'JsonWebTokenError') {
         res.status(400).send({error: "Invalid token"});
-        return;
     } else if (err?.errorResponse?.errmsg?.includes('E11000 duplicate key error')) {
         res.status(400).send({error: "username is taken"});
-        return;
     }
     next(err);
 }

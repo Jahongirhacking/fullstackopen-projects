@@ -38,33 +38,42 @@ describe("check /api/blogs/ route", async () => {
     })
 
     test("adding new blog and check length", async () => {
-        const response = await api.post(`/api/blogs`).send(newBlog).expect(201).expect('Content-Type', /application\/json/);
+        const token = await testHelper.getToken();
+        const response = await api.post(`/api/blogs`).send(newBlog).set('Authorization', `Bearer ${token}`).expect(201).expect('Content-Type', /application\/json/);
         assert.strictEqual(response.body.title, newBlog.title);
         const blogs = await testHelper.getBloglistFromDb();
         assert.strictEqual(blogs.length, testHelper.initialBloglist.length+1);
     })
 
+    test("adding unauthorized new blog", async () => {
+        await api.post(`/api/blogs`).send(newBlog).expect(401);
+    })
+
     test("missing like property should output 0", async () => {
+        const token = await testHelper.getToken();
         const response = await api.post(`/api/blogs`).send({
             title: "Lorem Ipsum Dolor",
             url: "Lorem Ipsum",
-        }).expect(201).expect('Content-Type', /application\/json/);
+        }).set('Authorization', `Bearer ${token}`).expect(201).expect('Content-Type', /application\/json/);
         assert.strictEqual(response.body.likes, 0);
         const blogs = await testHelper.getBloglistFromDb();
         assert.strictEqual(blogs.length, testHelper.initialBloglist.length+1);
     })
 
     test("missing title or url property should output 400 error", async () => {
-        await api.post(`/api/blogs`).send({}).expect(400);
+        const token = await testHelper.getToken();
+        await api.post(`/api/blogs`).send({}).set('Authorization', `Bearer ${token}`).expect(400);
     })
 
     test("delete a blog and check length", async () => {
+        const token = await testHelper.getToken();
+        await api.post(`/api/blogs`).send(newBlog).set('Authorization', `Bearer ${token}`).expect(201).expect('Content-Type', /application\/json/);
+        const blog = await Blog.findOne({title: newBlog.title});
         const blogsAtStart = await testHelper.getBloglistFromDb();
-        const blog = blogsAtStart[0];
-        await api.delete(`/api/blogs/${blog.id}`).expect(204);
+        await api.delete(`/api/blogs/${blog._id}`).set('Authorization', `Bearer ${token}`).expect(204);
         const blogsAtEnd = await testHelper.getBloglistFromDb();
-        assert(!(blogsAtEnd.map(b => b.id).includes(blog.id)));
-        assert.strictEqual(blogsAtEnd.length, testHelper.initialBloglist.length-1);
+        assert(!(blogsAtEnd.map(b => b.id).includes(blog._id)));
+        assert.strictEqual(blogsAtEnd.length, blogsAtStart.length-1);
     })
 
     test("upvote likes count", async () => {
