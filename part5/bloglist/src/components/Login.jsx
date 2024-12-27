@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import login from "../services/login.js";
+import { NotificationContext } from "../App.jsx";
 
 const Login = ({ setToken }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const { showMessage } = useContext(NotificationContext);
 
   const handleLogin = async () => {
     try {
@@ -12,7 +14,7 @@ const Login = ({ setToken }) => {
         setToken(token);
       }
     } catch (error) {
-      console.error(error);
+      showMessage("Invalid login or password", false);
     }
   };
 

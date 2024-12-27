@@ -1,23 +1,33 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import axios from "axios";
 import { getLocalStorage, localStorageNames } from "../utils/storage.js";
 import { getAll } from "../services/blogs.js";
+import { NotificationContext } from "../App.jsx";
 
 const baseURL = import.meta.env.VITE_API_URL;
 
 const BlogCreator = ({ setBlogs }) => {
   const [formObj, setFormObj] = useState({});
+  const { showMessage } = useContext(NotificationContext);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    await axios.post(`${baseURL}/blogs`, formObj, {
-      headers: {
-        Authorization: `Bearer ${getLocalStorage(localStorageNames.token)}`,
-      },
-    });
-    const blogs = await getAll();
-    setBlogs(blogs);
-    setFormObj({});
+    try {
+      e.preventDefault();
+      await axios.post(`${baseURL}/blogs`, formObj, {
+        headers: {
+          Authorization: `Bearer ${getLocalStorage(localStorageNames.token)}`,
+        },
+      });
+      const blogs = await getAll();
+      setBlogs(blogs);
+      showMessage(
+        `a new blog ${formObj?.title} by ${formObj?.author} added`,
+        true,
+      );
+      setFormObj({});
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
