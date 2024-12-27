@@ -24,7 +24,7 @@ blogRouter.post('/', middleware.tokenExtractor, async (request, response) => {
 
 blogRouter.delete('/:id', middleware.tokenExtractor, async (request, response) => {
     const blog_id = request.params.id;
-    const blog = await  Blog.findById(blog_id);
+    const blog = await Blog.findById(blog_id);
     const user_credentials = jwt.verify(request.token, process.env.JWT_SECRET);
     const user = await User.findById(user_credentials.id);
     if(user._id.toString() === blog.user.toString()) {
