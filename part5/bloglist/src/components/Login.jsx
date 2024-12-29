@@ -1,6 +1,8 @@
 import { useContext, useState } from "react";
-import login from "../services/login.js";
 import { NotificationContext } from "../App.jsx";
+import axios from "axios";
+
+const baseURL = import.meta.env.VITE_API_URL;
 
 const Login = ({ setToken }) => {
   const [username, setUsername] = useState("");
@@ -9,12 +11,16 @@ const Login = ({ setToken }) => {
 
   const handleLogin = async () => {
     try {
-      const { token } = await login({ username, password });
+      const { data } = await axios.post(`${baseURL}/login`, {
+        username,
+        password,
+      });
+      const token = data?.token;
       if (token) {
         setToken(token);
       }
     } catch (error) {
-      showMessage("Invalid login or password", false);
+      showMessage(error?.response?.data?.error, false);
     }
   };
 
@@ -24,11 +30,8 @@ const Login = ({ setToken }) => {
         display: "flex",
         flexDirection: "column",
         rowGap: "8px",
-        margin: "auto",
-        width: "fit-content",
       }}
     >
-      <h2>log in to application</h2>
       <label>
         username
         <input

@@ -1,0 +1,14 @@
+@mixin notification($color) {
+  color: $color;
+  border: 2px solid $color;
+  margin-bottom: 10px;
+  padding: 5px;
+}
+
+.success {
+  @include notification(green);
+}
+
+.error {
+  @include notification(red);
+}

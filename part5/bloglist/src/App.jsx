@@ -6,10 +6,12 @@ import {
 } from "./utils/storage.js";
 import Login from "./components/Login.jsx";
 import Blogs from "./components/Blogs.jsx";
-import { getMyProfile } from "./services/login.js";
 import BlogCreator from "./components/BlogCreator.jsx";
 import { getAll } from "./services/blogs.js";
 import Notification from "./components/Notification.jsx";
+import axios from "axios";
+
+const baseURL = import.meta.env.VITE_API_URL;
 
 export const NotificationContext = createContext(null);
 
@@ -39,8 +41,10 @@ const App = () => {
   useEffect(() => {
     if (token) {
       (async () => {
-        const myProfile = await getMyProfile(token);
-        setUser(myProfile);
+        const { data } = await axios.get(`${baseURL}/users/me`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setUser(data);
         setLocalStorage(localStorageNames.token, token);
       })();
     }
@@ -53,11 +57,20 @@ const App = () => {
   return (
     <NotificationContext.Provider value={{ showMessage }}>
       {!token ? (
-        <Login setToken={(token) => setToken(token)} />
+        <div
+          style={{
+            margin: "auto",
+            width: "fit-content",
+          }}
+        >
+          <h2>log in to application</h2>
+          <Notification message={message} isSuccess={isSuccess} />
+          <Login setToken={(token) => setToken(token)} />
+        </div>
       ) : (
         <div>
-          <Notification message={message} isSuccess={isSuccess} />
           <h2>blogs</h2>
+          <Notification message={message} isSuccess={isSuccess} />
           <p>
             {user?.username} logged in{" "}
             <button onClick={handleLogout}>logout</button>

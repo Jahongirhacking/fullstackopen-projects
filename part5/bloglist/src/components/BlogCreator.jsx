@@ -27,6 +27,10 @@ const BlogCreator = ({ setBlogs }) => {
       setFormObj({});
     } catch (error) {
       console.error(error);
+      showMessage(
+        `error on adding ${formObj?.title} by ${formObj?.author}`,
+        false,
+      );
     }
   };
 
