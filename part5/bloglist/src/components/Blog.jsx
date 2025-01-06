@@ -1,28 +1,27 @@
 import { useState } from "react";
 import { putLike } from "../services/blogs.js";
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, getAllBlogsFromDb }) => {
   const [isCollapse, setIsCollapse] = useState(true);
-  const [clonedBlog, setClonedBlog] = useState(blog);
 
   const handleLike = async (id) => {
-    const blog = await putLike(id);
-    setClonedBlog(blog);
+    await putLike(id);
+    await getAllBlogsFromDb();
   };
 
   return (
     <div style={{ border: "2px solid black", margin: "10px 5px" }}>
-      <p>{clonedBlog.title}</p>
+      <p>{blog.title}</p>
       {isCollapse ? (
         <button onClick={() => setIsCollapse(false)}>view</button>
       ) : (
         <>
-          <a href={clonedBlog.url}>{clonedBlog.url}</a>
+          <a href={blog.url}>{blog.url}</a>
           <p>
-            likes {clonedBlog.likes}
-            <button onClick={() => handleLike(clonedBlog.id)}>like</button>
+            likes {blog.likes}
+            <button onClick={() => handleLike(blog.id)}>like</button>
           </p>
-          <p>{clonedBlog.author}</p>
+          <p>{blog.author}</p>
           <button onClick={() => setIsCollapse(true)}>hide</button>
         </>
       )}

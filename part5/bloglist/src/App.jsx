@@ -57,8 +57,12 @@ const App = () => {
     }
   }, [token]);
 
+  const getAllBlogsFromDb = async () => {
+    await getAll().then((blogs) => setBlogs(blogs));
+  };
+
   useEffect(() => {
-    getAll().then((blogs) => setBlogs(blogs));
+    (async () => await getAllBlogsFromDb())();
   }, []);
 
   return (
@@ -86,7 +90,7 @@ const App = () => {
           <Togglable buttonLabel="create" ref={blogFormRef}>
             <BlogCreator setBlogs={(blogs) => updateBlogs(blogs)} />
           </Togglable>
-          <Blogs blogs={blogs} />
+          <Blogs blogs={blogs} getAllBlogsFromDb={getAllBlogsFromDb} />
         </div>
       )}
     </NotificationContext.Provider>
