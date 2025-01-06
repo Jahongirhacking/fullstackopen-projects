@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useRef, useState } from "react";
 import {
   getLocalStorage,
   localStorageNames,
@@ -10,6 +10,7 @@ import BlogCreator from "./components/BlogCreator.jsx";
 import { getAll } from "./services/blogs.js";
 import Notification from "./components/Notification.jsx";
 import axios from "axios";
+import Togglable from "./components/Togglable.jsx";
 
 const baseURL = import.meta.env.VITE_API_URL;
 
@@ -23,6 +24,12 @@ const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [message, setMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
+  const blogFormRef = useRef();
+
+  const updateBlogs = (blogs) => {
+    blogFormRef.current?.toggleVisibility();
+    setBlogs(blogs);
+  };
 
   const showMessage = (message, isSuccess) => {
     setMessage(message);
@@ -76,7 +83,9 @@ const App = () => {
             <button onClick={handleLogout}>logout</button>
           </p>
           <h2>create new</h2>
-          <BlogCreator setBlogs={setBlogs} />
+          <Togglable buttonLabel="create" ref={blogFormRef}>
+            <BlogCreator setBlogs={(blogs) => updateBlogs(blogs)} />
+          </Togglable>
           <Blogs blogs={blogs} />
         </div>
       )}
