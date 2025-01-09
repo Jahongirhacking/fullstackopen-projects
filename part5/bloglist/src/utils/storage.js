@@ -1,5 +1,5 @@
 export const localStorageNames = {
-  token: "token",
+  token: 'token',
 };
 
 export const getLocalStorage = (key) => {

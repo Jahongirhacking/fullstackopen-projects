@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { putLike, removeBlog } from "../services/blogs.js";
+import { useState } from 'react';
+import { putLike, removeBlog } from '../services/blogs.js';
+import PropTypes from 'prop-types';
 
 const Blog = ({ blog, getAllBlogsFromDb }) => {
   const [isCollapse, setIsCollapse] = useState(true);
@@ -10,17 +11,17 @@ const Blog = ({ blog, getAllBlogsFromDb }) => {
   };
 
   const handleRemove = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this post?")) return;
+    if (!window.confirm('Are you sure you want to delete this post?')) return;
     await removeBlog(id);
     await getAllBlogsFromDb();
   };
 
   return (
-    <div style={{ border: "2px solid black", margin: "10px 5px" }}>
+    <div style={{ border: '2px solid black', margin: '10px 5px' }}>
       <p>
         {blog.title} {blog.author}
         <button onClick={() => setIsCollapse((prev) => !prev)}>
-          {isCollapse ? "view" : "hide"}
+          {isCollapse ? 'view' : 'hide'}
         </button>
       </p>
 
@@ -37,6 +38,11 @@ const Blog = ({ blog, getAllBlogsFromDb }) => {
       )}
     </div>
   );
+};
+
+Blog.propTypes = {
+  getAllBlogsFromDb: PropTypes.func.isRequired,
+  blog: PropTypes.object.isRequired,
 };
 
 export default Blog;

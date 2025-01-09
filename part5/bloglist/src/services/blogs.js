@@ -1,5 +1,5 @@
-import axios from "axios";
-import { getLocalStorage, localStorageNames } from "../utils/storage.js";
+import axios from 'axios';
+import { getLocalStorage, localStorageNames } from '../utils/storage.js';
 
 const baseUrl = import.meta.env.VITE_API_URL;
 

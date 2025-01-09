@@ -1,4 +1,4 @@
-import Blog from "./Blog.jsx";
+import Blog from './Blog.jsx';
 
 const Blogs = ({ blogs, getAllBlogsFromDb }) => {
   return (
@@ -6,11 +6,7 @@ const Blogs = ({ blogs, getAllBlogsFromDb }) => {
       {[...blogs]
         .sort((a, b) => b.likes - a.likes)
         .map((blog) => (
-          <Blog
-            key={blog.id}
-            blog={blog}
-            getAllBlogsFromDb={getAllBlogsFromDb}
-          />
+          <Blog key={blog.id} blog={blog} getAllBlogsFromDb={getAllBlogsFromDb} />
         ))}
     </div>
   );

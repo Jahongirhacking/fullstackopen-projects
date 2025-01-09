@@ -1,16 +1,12 @@
-import { createContext, useEffect, useRef, useState } from "react";
-import {
-  getLocalStorage,
-  localStorageNames,
-  setLocalStorage,
-} from "./utils/storage.js";
-import Login from "./components/Login.jsx";
-import Blogs from "./components/Blogs.jsx";
-import BlogCreator from "./components/BlogCreator.jsx";
-import { getAll } from "./services/blogs.js";
-import Notification from "./components/Notification.jsx";
-import axios from "axios";
-import Togglable from "./components/Togglable.jsx";
+import { createContext, useEffect, useRef, useState } from 'react';
+import { getLocalStorage, localStorageNames, setLocalStorage } from './utils/storage.js';
+import Login from './components/Login.jsx';
+import Blogs from './components/Blogs.jsx';
+import BlogCreator from './components/BlogCreator.jsx';
+import { getAll } from './services/blogs.js';
+import Notification from './components/Notification.jsx';
+import axios from 'axios';
+import Togglable from './components/Togglable.jsx';
 
 const baseURL = import.meta.env.VITE_API_URL;
 
@@ -18,11 +14,9 @@ export const NotificationContext = createContext(null);
 
 const App = () => {
   const [user, setUser] = useState();
-  const [token, setToken] = useState(
-    getLocalStorage(localStorageNames.token) ?? "",
-  );
+  const [token, setToken] = useState(getLocalStorage(localStorageNames.token) ?? '');
   const [blogs, setBlogs] = useState([]);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
   const blogFormRef = useRef();
 
@@ -35,24 +29,28 @@ const App = () => {
     setMessage(message);
     setIsSuccess(isSuccess);
     setTimeout(() => {
-      setMessage("");
+      setMessage('');
       setIsSuccess(false);
     }, 3000);
   };
 
   const handleLogout = () => {
-    setToken("");
+    setToken('');
     localStorage.removeItem(localStorageNames.token);
   };
 
   useEffect(() => {
     if (token) {
       (async () => {
-        const { data } = await axios.get(`${baseURL}/users/me`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setUser(data);
-        setLocalStorage(localStorageNames.token, token);
+        try {
+          const { data } = await axios.get(`${baseURL}/users/me`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          setUser(data);
+          setLocalStorage(localStorageNames.token, token);
+        } catch (error) {
+          localStorage.removeItem(localStorageNames.token);
+        }
       })();
     }
   }, [token]);
@@ -67,11 +65,11 @@ const App = () => {
 
   return (
     <NotificationContext.Provider value={{ showMessage }}>
-      {!token ? (
+      {!user ? (
         <div
           style={{
-            margin: "auto",
-            width: "fit-content",
+            margin: 'auto',
+            width: 'fit-content',
           }}
         >
           <h2>log in to application</h2>
@@ -83,11 +81,10 @@ const App = () => {
           <h2>blogs</h2>
           <Notification message={message} isSuccess={isSuccess} />
           <p>
-            {user?.username} logged in{" "}
-            <button onClick={handleLogout}>logout</button>
+            {user?.username} logged in <button onClick={handleLogout}>logout</button>
           </p>
           <h2>create new</h2>
-          <Togglable buttonLabel="create" ref={blogFormRef}>
+          <Togglable buttonLabel='create' ref={blogFormRef}>
             <BlogCreator setBlogs={(blogs) => updateBlogs(blogs)} />
           </Togglable>
           <Blogs blogs={blogs} getAllBlogsFromDb={getAllBlogsFromDb} />

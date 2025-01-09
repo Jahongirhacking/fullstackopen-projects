@@ -1,12 +1,12 @@
-import { useContext, useState } from "react";
-import { NotificationContext } from "../App.jsx";
-import axios from "axios";
+import { useContext, useState } from 'react';
+import { NotificationContext } from '../App.jsx';
+import axios from 'axios';
 
 const baseURL = import.meta.env.VITE_API_URL;
 
 const Login = ({ setToken }) => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const { showMessage } = useContext(NotificationContext);
 
   const handleLogin = async () => {
@@ -27,15 +27,15 @@ const Login = ({ setToken }) => {
   return (
     <div
       style={{
-        display: "flex",
-        flexDirection: "column",
-        rowGap: "8px",
+        display: 'flex',
+        flexDirection: 'column',
+        rowGap: '8px',
       }}
     >
       <label>
         username
         <input
-          placeholder="enter username"
+          placeholder='enter username'
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
@@ -43,7 +43,7 @@ const Login = ({ setToken }) => {
       <label>
         password
         <input
-          placeholder="enter password"
+          placeholder='enter password'
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />

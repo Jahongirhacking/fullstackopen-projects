@@ -1,8 +1,8 @@
-import { useContext, useState } from "react";
-import axios from "axios";
-import { getLocalStorage, localStorageNames } from "../utils/storage.js";
-import { getAll } from "../services/blogs.js";
-import { NotificationContext } from "../App.jsx";
+import { useContext, useState } from 'react';
+import axios from 'axios';
+import { getLocalStorage, localStorageNames } from '../utils/storage.js';
+import { getAll } from '../services/blogs.js';
+import { NotificationContext } from '../App.jsx';
 
 const baseURL = import.meta.env.VITE_API_URL;
 
@@ -20,34 +20,26 @@ const BlogCreator = ({ setBlogs }) => {
       });
       const blogs = await getAll();
       setBlogs(blogs);
-      showMessage(
-        `a new blog ${formObj?.title} by ${formObj?.author} added`,
-        true,
-      );
+      showMessage(`a new blog ${formObj?.title} by ${formObj?.author} added`, true);
       setFormObj({});
     } catch (error) {
       console.error(error);
-      showMessage(
-        `error on adding ${formObj?.title} by ${formObj?.author}`,
-        false,
-      );
+      showMessage(`error on adding ${formObj?.title} by ${formObj?.author}`, false);
     }
   };
 
   return (
-    <div style={{ width: "fit-content", marginBottom: "2rem" }}>
+    <div style={{ width: 'fit-content', marginBottom: '2rem' }}>
       <form
         onSubmit={handleSubmit}
-        style={{ display: "flex", flexDirection: "column", rowGap: "5px" }}
+        style={{ display: 'flex', flexDirection: 'column', rowGap: '5px' }}
       >
-        {["title", "author", "url"].map((key) => (
+        {['title', 'author', 'url'].map((key) => (
           <label key={key}>
             {key}:
             <input
-              value={formObj[key] ?? ""}
-              onChange={(e) =>
-                setFormObj({ ...formObj, [key]: e.target.value })
-              }
+              value={formObj[key] ?? ''}
+              onChange={(e) => setFormObj({ ...formObj, [key]: e.target.value })}
             />
           </label>
         ))}
