@@ -1,37 +1,19 @@
-import { useContext, useState } from 'react';
-import axios from 'axios';
-import { getLocalStorage, localStorageNames } from '../utils/storage.js';
-import { getAll } from '../services/blogs.js';
-import { NotificationContext } from '../App.jsx';
+import { useState } from 'react';
+import PropTypes from 'prop-types';
 
-const baseURL = import.meta.env.VITE_API_URL;
-
-const BlogCreator = ({ setBlogs }) => {
+const BlogCreator = ({ handleSubmit }) => {
   const [formObj, setFormObj] = useState({});
-  const { showMessage } = useContext(NotificationContext);
 
-  const handleSubmit = async (e) => {
-    try {
-      e.preventDefault();
-      await axios.post(`${baseURL}/blogs`, formObj, {
-        headers: {
-          Authorization: `Bearer ${getLocalStorage(localStorageNames.token)}`,
-        },
-      });
-      const blogs = await getAll();
-      setBlogs(blogs);
-      showMessage(`a new blog ${formObj?.title} by ${formObj?.author} added`, true);
-      setFormObj({});
-    } catch (error) {
-      console.error(error);
-      showMessage(`error on adding ${formObj?.title} by ${formObj?.author}`, false);
-    }
+  const handleSubmitAndClear = (e) => {
+    e.preventDefault();
+    handleSubmit(formObj);
+    setFormObj({});
   };
 
   return (
     <div style={{ width: 'fit-content', marginBottom: '2rem' }}>
       <form
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmitAndClear}
         style={{ display: 'flex', flexDirection: 'column', rowGap: '5px' }}
       >
         {['title', 'author', 'url'].map((key) => (
@@ -40,13 +22,18 @@ const BlogCreator = ({ setBlogs }) => {
             <input
               value={formObj[key] ?? ''}
               onChange={(e) => setFormObj({ ...formObj, [key]: e.target.value })}
+              placeholder={key}
             />
           </label>
         ))}
-        <button>create</button>
+        <button type={'submit'}>create</button>
       </form>
     </div>
   );
+};
+
+BlogCreator.propTypes = {
+  handleSubmit: PropTypes.func.isRequired,
 };
 
 export default BlogCreator;

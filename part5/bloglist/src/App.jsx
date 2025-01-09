@@ -20,9 +20,8 @@ const App = () => {
   const [isSuccess, setIsSuccess] = useState(false);
   const blogFormRef = useRef();
 
-  const updateBlogs = (blogs) => {
-    blogFormRef.current?.toggleVisibility();
-    setBlogs(blogs);
+  const getAllBlogsFromDb = async () => {
+    await getAll().then((blogs) => setBlogs(blogs));
   };
 
   const showMessage = (message, isSuccess) => {
@@ -37,6 +36,22 @@ const App = () => {
   const handleLogout = () => {
     setToken('');
     localStorage.removeItem(localStorageNames.token);
+  };
+
+  const handleSubmit = async (formObj) => {
+    try {
+      await axios.post(`${baseURL}/blogs`, formObj, {
+        headers: {
+          Authorization: `Bearer ${getLocalStorage(localStorageNames.token)}`,
+        },
+      });
+      await getAllBlogsFromDb();
+      blogFormRef.current?.toggleVisibility();
+      showMessage(`a new blog ${formObj?.title} by ${formObj?.author} added`, true);
+    } catch (error) {
+      console.error(error);
+      showMessage(`error on adding ${formObj?.title} by ${formObj?.author}`, false);
+    }
   };
 
   useEffect(() => {
@@ -54,10 +69,6 @@ const App = () => {
       })();
     }
   }, [token]);
-
-  const getAllBlogsFromDb = async () => {
-    await getAll().then((blogs) => setBlogs(blogs));
-  };
 
   useEffect(() => {
     (async () => await getAllBlogsFromDb())();
@@ -84,8 +95,8 @@ const App = () => {
             {user?.username} logged in <button onClick={handleLogout}>logout</button>
           </p>
           <h2>create new</h2>
-          <Togglable buttonLabel='create' ref={blogFormRef}>
-            <BlogCreator setBlogs={(blogs) => updateBlogs(blogs)} />
+          <Togglable buttonLabel='new blog' ref={blogFormRef}>
+            <BlogCreator handleSubmit={handleSubmit} />
           </Togglable>
           <Blogs blogs={blogs} getAllBlogsFromDb={getAllBlogsFromDb} />
         </div>

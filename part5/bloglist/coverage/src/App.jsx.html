@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/97</span>
+                <span class='fraction'>0/108</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/97</span>
+                <span class='fraction'>0/108</span>
             </div>
         
             
@@ -160,7 +160,29 @@
 <a name='L95'></a><a href='#L95'>95</a>
 <a name='L96'></a><a href='#L96'>96</a>
 <a name='L97'></a><a href='#L97'>97</a>
-<a name='L98'></a><a href='#L98'>98</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L98'></a><a href='#L98'>98</a>
+<a name='L99'></a><a href='#L99'>99</a>
+<a name='L100'></a><a href='#L100'>100</a>
+<a name='L101'></a><a href='#L101'>101</a>
+<a name='L102'></a><a href='#L102'>102</a>
+<a name='L103'></a><a href='#L103'>103</a>
+<a name='L104'></a><a href='#L104'>104</a>
+<a name='L105'></a><a href='#L105'>105</a>
+<a name='L106'></a><a href='#L106'>106</a>
+<a name='L107'></a><a href='#L107'>107</a>
+<a name='L108'></a><a href='#L108'>108</a>
+<a name='L109'></a><a href='#L109'>109</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -279,9 +301,8 @@
 <span class="cstat-no" title="statement not covered" >  const [isSuccess, setIsSuccess] = useState(false);</span>
 <span class="cstat-no" title="statement not covered" >  const blogFormRef = useRef();</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  const updateBlogs = (blogs) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    blogFormRef.current?.toggleVisibility();</span>
-<span class="cstat-no" title="statement not covered" >    setBlogs(blogs);</span>
+<span class="cstat-no" title="statement not covered" >  const getAllBlogsFromDb = async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    await getAll().then((blogs) =&gt; setBlogs(blogs));</span>
 <span class="cstat-no" title="statement not covered" >  };</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >  const showMessage = (message, isSuccess) =&gt; {</span>
@@ -296,6 +317,22 @@
 <span class="cstat-no" title="statement not covered" >  const handleLogout = () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >    setToken('');</span>
 <span class="cstat-no" title="statement not covered" >    localStorage.removeItem(localStorageNames.token);</span>
+<span class="cstat-no" title="statement not covered" >  };</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  const handleSubmit = async (formObj) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    try {</span>
+<span class="cstat-no" title="statement not covered" >      await axios.post(`${baseURL}/blogs`, formObj, {</span>
+<span class="cstat-no" title="statement not covered" >        headers: {</span>
+<span class="cstat-no" title="statement not covered" >          Authorization: `Bearer ${getLocalStorage(localStorageNames.token)}`,</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >      });</span>
+<span class="cstat-no" title="statement not covered" >      await getAllBlogsFromDb();</span>
+<span class="cstat-no" title="statement not covered" >      blogFormRef.current?.toggleVisibility();</span>
+<span class="cstat-no" title="statement not covered" >      showMessage(`a new blog ${formObj?.title} by ${formObj?.author} added`, true);</span>
+<span class="cstat-no" title="statement not covered" >    } catch (error) {</span>
+<span class="cstat-no" title="statement not covered" >      console.error(error);</span>
+<span class="cstat-no" title="statement not covered" >      showMessage(`error on adding ${formObj?.title} by ${formObj?.author}`, false);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" >  };</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >  useEffect(() =&gt; {</span>
@@ -313,10 +350,6 @@
 <span class="cstat-no" title="statement not covered" >      })();</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" >  }, [token]);</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  const getAllBlogsFromDb = async () =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    await getAll().then((blogs) =&gt; setBlogs(blogs));</span>
-<span class="cstat-no" title="statement not covered" >  };</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >  useEffect(() =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >    (async () =&gt; await getAllBlogsFromDb())();</span>
@@ -343,8 +376,8 @@
 <span class="cstat-no" title="statement not covered" >            {user?.username} logged in &lt;button onClick={handleLogout}&gt;logout&lt;/button&gt;</span>
 <span class="cstat-no" title="statement not covered" >          &lt;/p&gt;</span>
 <span class="cstat-no" title="statement not covered" >          &lt;h2&gt;create new&lt;/h2&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;Togglable buttonLabel='create' ref={blogFormRef}&gt;</span>
-<span class="cstat-no" title="statement not covered" >            &lt;BlogCreator setBlogs={(blogs) =&gt; updateBlogs(blogs)} /&gt;</span>
+<span class="cstat-no" title="statement not covered" >          &lt;Togglable buttonLabel='new blog' ref={blogFormRef}&gt;</span>
+<span class="cstat-no" title="statement not covered" >            &lt;BlogCreator handleSubmit={handleSubmit} /&gt;</span>
 <span class="cstat-no" title="statement not covered" >          &lt;/Togglable&gt;</span>
 <span class="cstat-no" title="statement not covered" >          &lt;Blogs blogs={blogs} getAllBlogsFromDb={getAllBlogsFromDb} /&gt;</span>
 <span class="cstat-no" title="statement not covered" >        &lt;/div&gt;</span>
@@ -361,7 +394,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-01-09T11:36:14.004Z
+                at 2025-01-09T13:52:44.534Z
             </div>
         <script src="../prettify.js"></script>
         <script>

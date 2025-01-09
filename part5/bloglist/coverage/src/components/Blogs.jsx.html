@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/15</span>
+                <span class='fraction'>0/27</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/15</span>
+                <span class='fraction'>0/27</span>
             </div>
         
             
@@ -78,7 +78,31 @@
 <a name='L13'></a><a href='#L13'>13</a>
 <a name='L14'></a><a href='#L14'>14</a>
 <a name='L15'></a><a href='#L15'>15</a>
-<a name='L16'></a><a href='#L16'>16</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L16'></a><a href='#L16'>16</a>
+<a name='L17'></a><a href='#L17'>17</a>
+<a name='L18'></a><a href='#L18'>18</a>
+<a name='L19'></a><a href='#L19'>19</a>
+<a name='L20'></a><a href='#L20'>20</a>
+<a name='L21'></a><a href='#L21'>21</a>
+<a name='L22'></a><a href='#L22'>22</a>
+<a name='L23'></a><a href='#L23'>23</a>
+<a name='L24'></a><a href='#L24'>24</a>
+<a name='L25'></a><a href='#L25'>25</a>
+<a name='L26'></a><a href='#L26'>26</a>
+<a name='L27'></a><a href='#L27'>27</a>
+<a name='L28'></a><a href='#L28'>28</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -94,14 +118,26 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >import Blog from './Blog.jsx';</span></span></span>
+<span class="cstat-no" title="statement not covered" >import { putLike, removeBlog } from '../services/blogs.js';</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >const Blogs = ({ blogs, getAllBlogsFromDb }) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >  const handleLike = async (id) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    await putLike(id);</span>
+<span class="cstat-no" title="statement not covered" >    await getAllBlogsFromDb();</span>
+<span class="cstat-no" title="statement not covered" >  };</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  const handleRemove = async (id) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    if (!window.confirm('Are you sure you want to delete this post?')) return;</span>
+<span class="cstat-no" title="statement not covered" >    await removeBlog(id);</span>
+<span class="cstat-no" title="statement not covered" >    await getAllBlogsFromDb();</span>
+<span class="cstat-no" title="statement not covered" >  };</span>
+<span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >  return (</span>
 <span class="cstat-no" title="statement not covered" >    &lt;div&gt;</span>
 <span class="cstat-no" title="statement not covered" >      {[...blogs]</span>
 <span class="cstat-no" title="statement not covered" >        .sort((a, b) =&gt; b.likes - a.likes)</span>
 <span class="cstat-no" title="statement not covered" >        .map((blog) =&gt; (</span>
-<span class="cstat-no" title="statement not covered" >          &lt;Blog key={blog.id} blog={blog} getAllBlogsFromDb={getAllBlogsFromDb} /&gt;</span>
+<span class="cstat-no" title="statement not covered" >          &lt;Blog key={blog.id} blog={blog} handleLike={handleLike} handleRemove={handleRemove} /&gt;</span>
 <span class="cstat-no" title="statement not covered" >        ))}</span>
 <span class="cstat-no" title="statement not covered" >    &lt;/div&gt;</span>
 <span class="cstat-no" title="statement not covered" >  );</span>
@@ -115,7 +151,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-01-09T11:36:14.004Z
+                at 2025-01-09T13:52:44.534Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
