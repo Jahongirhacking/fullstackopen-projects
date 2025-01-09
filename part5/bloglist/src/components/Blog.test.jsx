@@ -16,12 +16,16 @@ const blog = {
 
 describe('<Blog />', () => {
   let container;
-  let mockFunc;
+  let mockLikeFunc;
+  let mockRemoveFunc;
   const user = userEvent.setup();
 
   beforeEach(() => {
-    mockFunc = vi.fn();
-    container = render(<Blog blog={blog} getAllBlogsFromDb={mockFunc} />).container;
+    mockLikeFunc = vi.fn();
+    mockRemoveFunc = vi.fn();
+    container = render(
+      <Blog blog={blog} handleLike={mockLikeFunc} handleRemove={mockRemoveFunc} />,
+    ).container;
   });
 
   test('renders title and author and not likes', async () => {
@@ -42,5 +46,20 @@ describe('<Blog />', () => {
     const element1 = await screen.findByText(new RegExp(blog.url, 'i'));
     const element2 = await screen.findByText(new RegExp(`likes ${blog.likes}`, 'i'));
     expect(element1 && element2).toBeTruthy();
+  });
+
+  test('if like button clicked twice', async () => {
+    const buttons = screen.getAllByRole('button');
+    const toggleButton = buttons.find((button) => button.textContent === 'view');
+    expect(toggleButton).toBeDefined();
+    // click, change button hide
+    await user.click(toggleButton);
+    expect(toggleButton).toHaveTextContent('hide');
+    // click like twice
+    const newButtons = screen.getAllByRole('button');
+    const likeButton = newButtons.find((button) => button.textContent === 'like');
+    await user.click(likeButton);
+    await user.click(likeButton);
+    expect(mockLikeFunc.mock.calls.length).toStrictEqual(2);
   });
 });

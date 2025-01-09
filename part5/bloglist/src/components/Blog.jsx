@@ -1,20 +1,8 @@
 import { useState } from 'react';
-import { putLike, removeBlog } from '../services/blogs.js';
 import PropTypes from 'prop-types';
 
-const Blog = ({ blog, getAllBlogsFromDb }) => {
+const Blog = ({ blog, handleLike, handleRemove }) => {
   const [isCollapse, setIsCollapse] = useState(true);
-
-  const handleLike = async (id) => {
-    await putLike(id);
-    await getAllBlogsFromDb();
-  };
-
-  const handleRemove = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this post?')) return;
-    await removeBlog(id);
-    await getAllBlogsFromDb();
-  };
 
   return (
     <div style={{ border: '2px solid black', margin: '10px 5px' }}>
@@ -41,7 +29,8 @@ const Blog = ({ blog, getAllBlogsFromDb }) => {
 };
 
 Blog.propTypes = {
-  getAllBlogsFromDb: PropTypes.func.isRequired,
+  handleLike: PropTypes.func.isRequired,
+  handleRemove: PropTypes.func.isRequired,
   blog: PropTypes.object.isRequired,
 };
 
