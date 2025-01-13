@@ -14,7 +14,7 @@ const Blogs = ({ blogs, getAllBlogsFromDb, username }) => {
   };
 
   return (
-    <div>
+    <div data-testid='blogs'>
       {[...blogs]
         .sort((a, b) => b.likes - a.likes)
         .map((blog) => (

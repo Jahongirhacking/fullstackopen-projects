@@ -1,3 +1,4 @@
+const {expect} = require("@playwright/test");
 const BASE_URL = 'http://localhost:3001/api';
 
 const registerWith = async (request, name, username, password) => {
@@ -26,5 +27,5 @@ const createBlog = async (page, title, author, url) => {
 module.exports = {
     registerWith,
     loginWith,
-    createBlog,
+    createBlog
 }

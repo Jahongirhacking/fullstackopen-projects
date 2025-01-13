@@ -39,6 +39,7 @@ describe('Blogs', () => {
             describe('Blog', () => {
                 beforeEach(async ({page}) => {
                     await createBlog(page, 'Hello world', 'Ozoda', 'https://hello.world');
+                    await createBlog(page, 'Hi guys', 'Jahongir', 'https://hello.werld');
                 })
 
                 test('a blog can be liked', async ({page}) => {
@@ -60,7 +61,7 @@ describe('Blogs', () => {
                     await expect(blog).not.toBeVisible();
                 })
 
-                test.only('only owner can see remove button', async ({page}) => {
+                test('only owner can see remove button', async ({page}) => {
                     const blog = await page.getByTestId('blog').getByText('Hello World');
                     await blog.getByRole('button', {name: /view/i}).click();
                     await expect(blog.locator('..').getByRole('button', {name: /remove/i})).toBeVisible();
@@ -70,6 +71,43 @@ describe('Blogs', () => {
                     const newBlog = await page.getByTestId('blog').getByText('Hello World');
                     await newBlog.getByRole('button', {name: /view/i}).click();
                     await expect(newBlog.locator('..').getByRole('button', {name: /remove/i})).not.toBeVisible();
+                })
+
+                test.only('blogs are sorted', async ({page}) => {
+                    const blogs = await page.locator('[data-testid="blog"]');
+
+                    for (let i = 0; i < await blogs.count(); i++) {
+                        await blogs.nth(i).getByRole('button', {name: /view/i}).click();
+                    }
+
+                    // Function to like a blog and wait for the like count to update
+                    async function likeBlog(blog, likes, initial = 0) {
+                        const likeButton = await blog.locator('..').getByRole('button', {name: /like/i});
+                        for (let i = 0; i < likes; i++) {
+                            // Click the like button
+                            await likeButton.click();
+
+                            // Wait for the like count to update
+                            await blog.locator('..').getByText(`likes ${initial + i + 1}`).waitFor();
+                        }
+                    }
+
+                    const blog1 = await page.getByTestId('blog').getByText('Hello World');
+                    const blog2 = await page.getByTestId('blog').getByText('Hi guys');
+
+                    await likeBlog(blog2, 1);
+                    await likeBlog(blog1, 2);
+                    await likeBlog(blog2, 4, 1);
+
+                    const likes = await blogs.evaluateAll((elements) => {
+                        return elements.map((blog) => {
+                            const text = blog.textContent || '';
+                            const match = text.match(/likes (\d+)/);
+                            return match ? parseInt(match[1], 10) : 0; // Default to 0 if no match is found
+                        });
+                    });
+
+                    expect(likes.join(',')).toEqual([...likes].sort((a, b) => b - a).join(','));
                 })
             })
         })
