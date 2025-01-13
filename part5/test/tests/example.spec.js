@@ -46,6 +46,18 @@ describe('Blogs', () => {
                     await blog.locator('..').getByRole('button', {name: /like/i}).click();
                     await expect(blog.locator('..').getByText(/likes 1/i)).toBeVisible();
                 })
+
+                test('a blog can be removable', async ({page}) => {
+                    const blog = await page.getByTestId('blog').getByText('Hello World');
+                    await blog.getByRole('button', {name: /view/i}).click();
+                    page.on('dialog', async (dialog) => {
+                        expect(dialog.type()).toBe('confirm');
+                        expect(dialog.message()).toBe('Are you sure you want to delete this post?');
+                        await dialog.accept();
+                    })
+                    await blog.locator('..').getByRole('button', {name: /remove/i}).click();
+                    await expect(blog).not.toBeVisible();
+                })
             })
         })
     })
