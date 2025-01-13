@@ -5,7 +5,7 @@ const Blog = ({ blog, handleLike, handleRemove }) => {
   const [isCollapse, setIsCollapse] = useState(true);
 
   return (
-    <div style={{ border: '2px solid black', margin: '10px 5px' }}>
+    <div data-testid={'blog'} style={{ border: '2px solid black', margin: '10px 5px' }}>
       <p>
         {blog.title} {blog.author}
         <button onClick={() => setIsCollapse((prev) => !prev)}>
