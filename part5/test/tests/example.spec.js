@@ -34,6 +34,19 @@ describe('Blogs', () => {
                 await createBlog(page, 'Hello world', 'Ozoda', 'https://hello.world');
                 await expect(page.getByTestId('blog').getByText('Hello World')).toBeVisible();
             })
+
+            describe('Blog', () => {
+                beforeEach(async ({page}) => {
+                    await createBlog(page, 'Hello world', 'Ozoda', 'https://hello.world');
+                })
+
+                test('a blog can be liked', async ({page}) => {
+                    const blog = await page.getByTestId('blog').getByText('Hello World');
+                    await blog.getByRole('button', {name: /view/i}).click();
+                    await blog.locator('..').getByRole('button', {name: /like/i}).click();
+                    await expect(blog.locator('..').getByText(/likes 1/i)).toBeVisible();
+                })
+            })
         })
     })
 })
