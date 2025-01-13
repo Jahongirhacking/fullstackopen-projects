@@ -1,7 +1,7 @@
 import Blog from './Blog.jsx';
 import { putLike, removeBlog } from '../services/blogs.js';
 
-const Blogs = ({ blogs, getAllBlogsFromDb }) => {
+const Blogs = ({ blogs, getAllBlogsFromDb, username }) => {
   const handleLike = async (id) => {
     await putLike(id);
     await getAllBlogsFromDb();
@@ -18,7 +18,13 @@ const Blogs = ({ blogs, getAllBlogsFromDb }) => {
       {[...blogs]
         .sort((a, b) => b.likes - a.likes)
         .map((blog) => (
-          <Blog key={blog.id} blog={blog} handleLike={handleLike} handleRemove={handleRemove} />
+          <Blog
+            key={blog.id}
+            blog={blog}
+            handleLike={handleLike}
+            handleRemove={handleRemove}
+            username={username}
+          />
         ))}
     </div>
   );

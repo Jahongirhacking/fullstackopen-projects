@@ -7,6 +7,7 @@ describe('Blogs', () => {
     beforeEach(async ({page, request}) => {
         await request.post(`${BASE_URL}/test/reset`);
         await registerWith(request, 'Jahongir Hayitov', 'Jahongirhacking', 'joxa1805');
+        await registerWith(request, 'Ozoda Mamanova', 'mamanova', 'ozoda1211');
         await page.goto('http://localhost:5173');
     })
 
@@ -57,6 +58,18 @@ describe('Blogs', () => {
                     })
                     await blog.locator('..').getByRole('button', {name: /remove/i}).click();
                     await expect(blog).not.toBeVisible();
+                })
+
+                test.only('only owner can see remove button', async ({page}) => {
+                    const blog = await page.getByTestId('blog').getByText('Hello World');
+                    await blog.getByRole('button', {name: /view/i}).click();
+                    await expect(blog.locator('..').getByRole('button', {name: /remove/i})).toBeVisible();
+                    await page.getByRole('button', {name: /logout/i}).click();
+                    // log in with dif user
+                    await loginWith(page, 'mamanova', 'ozoda1211');
+                    const newBlog = await page.getByTestId('blog').getByText('Hello World');
+                    await newBlog.getByRole('button', {name: /view/i}).click();
+                    await expect(newBlog.locator('..').getByRole('button', {name: /remove/i})).not.toBeVisible();
                 })
             })
         })

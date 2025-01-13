@@ -99,7 +99,7 @@ const App = () => {
           <Togglable buttonLabel='new blog' ref={blogFormRef}>
             <BlogCreator handleSubmit={handleSubmit} />
           </Togglable>
-          <Blogs blogs={blogs} getAllBlogsFromDb={getAllBlogsFromDb} />
+          <Blogs username={user?.username} blogs={blogs} getAllBlogsFromDb={getAllBlogsFromDb} />
         </div>
       )}
     </NotificationContext.Provider>

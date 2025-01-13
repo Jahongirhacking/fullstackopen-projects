@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 
-const Blog = ({ blog, handleLike, handleRemove }) => {
+const Blog = ({ blog, handleLike, handleRemove, username }) => {
   const [isCollapse, setIsCollapse] = useState(true);
 
   return (
@@ -21,7 +21,9 @@ const Blog = ({ blog, handleLike, handleRemove }) => {
             <button onClick={() => handleLike(blog.id)}>like</button>
           </p>
           <p>{blog?.user?.username}</p>
-          <button onClick={() => handleRemove(blog.id)}>remove</button>
+          {blog?.user?.username === username && (
+            <button onClick={() => handleRemove(blog.id)}>remove</button>
+          )}
         </>
       )}
     </div>
